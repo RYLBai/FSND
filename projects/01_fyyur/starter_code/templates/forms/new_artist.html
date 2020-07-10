@@ -1,6 +1,7 @@
 {% extends 'layouts/main.html' %}
 {% block title %}New Artist{% endblock %}
 {% block content %}
+  <script src="/static/js/libs/jquery-1.11.1.min.js"></script>
   <div class="form-wrapper">
     <form method="post" class="form">
       <h3 class="form-heading">List a new artist</h3>
@@ -26,13 +27,35 @@
       <div class="form-group">
         <label for="genres">Genres</label>
         <small>Ctrl+Click to select multiple</small>
-        {{ form.genres(class_ = 'form-control', placeholder='Genres, separated by commas', id=form.state, autofocus = true) }}
+        {{ form.genres(class_ = 'form-control', placeholder='Genres, separated by commas', autofocus = true) }}
       </div>
       <div class="form-group">
-          <label for="genres">Facebook Link</label>
-          {{ form.facebook_link(class_ = 'form-control', placeholder='http://', id=form.state, autofocus = true) }}
-        </div>
+          <label for="website">Website</label>
+          {{ form.website(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+      </div>      
+      <div class="form-group">
+          <label for="facebook_link">Facebook Link</label>
+          {{ form.facebook_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="seeking_venue">{{ form.seeking_venue(class_ = 'form-inline', id='seeking_venue', value='yes') }} Seeking Venue</label>
+      </div>      
+      <div class="form-group" id='seeking_description' style="display: none;">
+        <label for="seeking_venue">Seeking Description</label>
+        {{ form.seeking_description(class_ = 'form-control', placeholder='Desired performance venue is ...') }} 
+      </div> 
       <input type="submit" value="Create Venue" class="btn btn-primary btn-lg btn-block">
     </form>
   </div>
+  <script>
+    $(document).ready(function(){
+      $('#seeking_venue').removeAttr('checked');
+      $('#seeking_venue').change(function(){
+        if (this.checked == true)
+          $('#seeking_description').show(300);
+        else
+          $('#seeking_description').hide(300);
+      });
+    });
+  </script>
 {% endblock %}
