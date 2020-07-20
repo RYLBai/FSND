@@ -1,38 +1,93 @@
 {% extends 'layouts/main.html' %}
 {% block title %}Edit Artist{% endblock %}
 {% block content %}
+  <script src="/static/js/libs/jquery-1.11.1.min.js"></script>
   <div class="form-wrapper">
     <form class="form" method="post" action="/artists/{{artist.id}}/edit">
+      {{form.hidden_tag()}}      
       <h3 class="form-heading">Edit artist <em>{{ artist.name }}</em></h3>
       <div class="form-group">
-        <label for="name">Name</label>
-        {{ form.name(class_ = 'form-control', autofocus = true) }}
-      </div>
-      <div class="form-group">
-          <label>City & State</label>
-          <div class="form-inline">
-            <div class="form-group">
-              {{ form.city(class_ = 'form-control', placeholder='City', autofocus = true) }}
+        <div class="form-group">
+          <label for="name">Name</label>
+          {% if form.name.errors %} 
+            {{ form.name(class_ = 'form-control is-invalid', autofocus = true) }}
+            <div class='invalid-feedback'>Please input a valid name</div>
+          {% else %}
+            {{ form.name(class_ = 'form-control', autofocus = true) }}
+          {% endif%}
+        </div>
+        <div class="form-group">
+            <label>City & State</label>
+            <div class="form-inline">
+              <div class="form-group">
+                {{ form.city(class_ = 'form-control', placeholder='City', autofocus = true) }}
+              </div>
+              <div class="form-group">
+                {{ form.state(class_ = 'form-control', placeholder='State', autofocus = true) }}
+              </div>
             </div>
-            <div class="form-group">
-              {{ form.state(class_ = 'form-control', placeholder='State', autofocus = true) }}
-            </div>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            {% if form.phone.errors %}
+              {{ form.phone(class_ = 'form-control is-invalid', placeholder='xxx-xxx-xxxx', autofocus = true) }}
+              <div class='invalid-feedback'>Please input a valid phone number as xxx-xxx-xxxx</div>  
+            {% else %}
+              {{ form.phone(class_ = 'form-control', placeholder='xxx-xxx-xxxx', autofocus = true) }}
+            {% endif %}
           </div>
-      </div>
-      <div class="form-group">
-          <label for="phone">Phone</label>
-          {{ form.phone(class_ = 'form-control', placeholder='xxx-xxx-xxxx', autofocus = true) }}
+        <div class="form-group">
+          <label for="genres">Genres</label>
+          <small>Ctrl+Click to select multiple</small>
+          {{ form.genres(class_ = 'form-control', placeholder='Genres, separated by commas', autofocus = true) }}
         </div>
-      <div class="form-group">
-        <label for="genres">Genres</label>
-        <small>Ctrl+Click to select multiple</small>
-        {{ form.genres(class_ = 'form-control', placeholder='Genres, separated by commas', id=form.state, autofocus = true) }}
-      </div>
-      <div class="form-group">
-          <label for="genres">Facebook Link</label>
-          {{ form.facebook_link(class_ = 'form-control', placeholder='http://', id=form.state, autofocus = true) }}
+        <div class="form-group">
+            <label for="website">Website</label>
+            {% if form.website.errors %}        
+              {{ form.website(class_ = 'form-control is-invalid', placeholder='http://', autofocus = true) }}
+              <div class='invalid-feedback'>Please input a valid website link</div>
+            {% else %}
+              {{ form.website(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+            {% endif %}
+        </div>      
+        <div class="form-group">
+            <label for="facebook_link">Facebook Link</label>
+            {% if form.facebook_link.errors %}
+              {{ form.facebook_link(class_ = 'form-control is-invalid', placeholder='http://', autofocus = true) }}
+              <div class='invalid-feedback'>Please input a valid Facebook link</div>
+            {% else %}
+              {{ form.facebook_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+            {% endif%}          
+        </div>      
+        <div class="form-group">
+          <label for="image_link">Image Link</label>
+          {% if form.image_link.errors %}  
+            {{ form.image_link(class_ = 'form-control is-invalid', placeholder='http://', autofocus = true) }}
+            <div class='invalid-feedback'>Please input a valid image link</div>
+          {% else %}
+            {{ form.image_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+          {% endif%}
         </div>
+        <div class="form-group">
+          <label for="seeking_venue">{{ form.seeking_venue(class_ = 'form-inline', id='seeking_venue', value='yes') }} Seeking Venue</label>
+        </div>      
+        <div class="form-group" id='seeking_description' style="display: none;">
+          <label for="seeking_venue">Seeking Description</label>
+          {{ form.seeking_description(class_ = 'form-control', placeholder='Desired performance venue is ...') }} 
+        </div>   
       <input type="submit" value="Edit Artist" class="btn btn-primary btn-lg btn-block">
     </form>
   </div>
+  <script>
+    $(document).ready(function(){
+      if (document.getElementById('seeking_venue').checked == true)
+        $('#seeking_description').show();
+      $('#seeking_venue').change(function(){
+        if (this.checked == true)
+          $('#seeking_description').show(300);
+        else
+          $('#seeking_description').hide(300);
+      });
+    });
+  </script>
 {% endblock %}

@@ -1,18 +1,24 @@
 from datetime import datetime
 from flask_wtf import Form
-from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField, TextAreaField
-from wtforms.validators import DataRequired, AnyOf, URL
+from wtforms import IntegerField, StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField, TextAreaField
+from wtforms.validators import DataRequired, AnyOf, URL, NumberRange, Optional, Regexp
+from wtforms_components import DateRange
+
 
 class ShowForm(Form):
-    artist_id = StringField(
-        'artist_id'
+    artist_id = IntegerField(
+        'artist_id',
+        validators=[DataRequired()]
     )
-    venue_id = StringField(
-        'venue_id'
+    venue_id = IntegerField(
+        'venue_id',
+        validators=[DataRequired()]
     )
     start_time = DateTimeField(
         'start_time',
-        validators=[DataRequired()],
+        format = '%Y-%m-%d %H:%M',
+        validators=[DataRequired(),
+        ],
         default= datetime.today()
     )
 
@@ -84,10 +90,12 @@ class VenueForm(Form):
         'address', validators=[DataRequired()]
     )
     phone = StringField(
-        'phone'
+        #  xxx-xxx-xxxx constraints (3 digits)- (3 digits)- (4 digits)
+        'phone', validators = [Optional(), Regexp('^\d{3}-\d{3}-\d{4}$')]
     )
     image_link = StringField(
-        'image_link'
+        'image_link',
+        validators = [URL(), Optional()]
     )
     genres = SelectMultipleField(
         # TODO implement enum restriction
@@ -115,8 +123,13 @@ class VenueForm(Form):
         ]
     )
     facebook_link = StringField(
-        'facebook_link', validators=[URL()]
+        'facebook_link', validators=[URL(), Optional()]
     )
+    website = StringField(
+        'website', validators=[URL(), Optional()]
+    )
+    seeking_talent = BooleanField()
+    seeking_description = TextAreaField()    
 
 class ArtistForm(Form):
     name = StringField(
@@ -182,11 +195,12 @@ class ArtistForm(Form):
         ]
     )
     phone = StringField(
-        # TODO implement validation logic for state
-        'phone'
+        #  xxx-xxx-xxxx constraints (3 digits)- (3 digits)- (4 digits)
+        'phone', validators = [Optional(), Regexp('^\d{3}-\d{3}-\d{4}$')]
     )
     image_link = StringField(
-        'image_link'
+        'image_link',
+        validators = [URL(), Optional()]
     )
     genres = SelectMultipleField(
         # TODO implement enum restriction
@@ -215,13 +229,11 @@ class ArtistForm(Form):
     )
     facebook_link = StringField(
         # TODO implement enum restriction
-        'facebook_link', validators=[URL()]
+        'facebook_link', validators=[URL(), Optional()]
     )
     website = StringField(
         # TODO implement enum restriction
-        'website', validators=[URL()]
+        'website', validators=[URL(), Optional()]
     )    
     seeking_venue = BooleanField()
     seeking_description = TextAreaField()
-
-# TODO IMPLEMENT NEW ARTIST FORM AND NEW SHOW FORM

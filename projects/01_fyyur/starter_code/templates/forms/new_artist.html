@@ -4,10 +4,16 @@
   <script src="/static/js/libs/jquery-1.11.1.min.js"></script>
   <div class="form-wrapper">
     <form method="post" class="form">
-      <h3 class="form-heading">List a new artist</h3>
+      {{form.hidden_tag()}}      
+      <h3 class="form-heading">List a new artist <a href="{{ url_for('index') }}" title="Back to homepage"><i class="fa fa-home pull-right"></i></a></h3>
       <div class="form-group">
         <label for="name">Name</label>
-        {{ form.name(class_ = 'form-control', autofocus = true) }}
+        {% if form.name.errors %} 
+          {{ form.name(class_ = 'form-control is-invalid', autofocus = true) }}
+          <div class='invalid-feedback'>Please input a valid name</div>
+        {% else %}
+          {{ form.name(class_ = 'form-control', autofocus = true) }}
+        {% endif%}
       </div>
       <div class="form-group">
           <label>City & State</label>
@@ -22,7 +28,12 @@
       </div>
       <div class="form-group">
           <label for="phone">Phone</label>
-          {{ form.phone(class_ = 'form-control', placeholder='xxx-xxx-xxxx', autofocus = true) }}
+          {% if form.phone.errors %}
+            {{ form.phone(class_ = 'form-control is-invalid', placeholder='xxx-xxx-xxxx', autofocus = true) }}
+            <div class='invalid-feedback'>Please input a valid phone number as xxx-xxx-xxxx</div>  
+          {% else %}
+            {{ form.phone(class_ = 'form-control', placeholder='xxx-xxx-xxxx', autofocus = true) }}
+          {% endif %}
         </div>
       <div class="form-group">
         <label for="genres">Genres</label>
@@ -31,11 +42,30 @@
       </div>
       <div class="form-group">
           <label for="website">Website</label>
-          {{ form.website(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+          {% if form.website.errors %}        
+            {{ form.website(class_ = 'form-control is-invalid', placeholder='http://', autofocus = true) }}
+            <div class='invalid-feedback'>Please input a valid website link</div>
+          {% else %}
+            {{ form.website(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+          {% endif %}
       </div>      
       <div class="form-group">
           <label for="facebook_link">Facebook Link</label>
-          {{ form.facebook_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+          {% if form.facebook_link.errors %}
+            {{ form.facebook_link(class_ = 'form-control is-invalid', placeholder='http://', autofocus = true) }}
+            <div class='invalid-feedback'>Please input a valid Facebook link</div>
+          {% else %}
+            {{ form.facebook_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+          {% endif%}          
+      </div>      
+      <div class="form-group">
+        <label for="image_link">Image Link</label>
+        {% if form.image_link.errors %}  
+          {{ form.image_link(class_ = 'form-control is-invalid', placeholder='http://', autofocus = true) }}
+          <div class='invalid-feedback'>Please input a valid image link</div>
+        {% else %}
+          {{ form.image_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+        {% endif%}
       </div>
       <div class="form-group">
         <label for="seeking_venue">{{ form.seeking_venue(class_ = 'form-inline', id='seeking_venue', value='yes') }} Seeking Venue</label>

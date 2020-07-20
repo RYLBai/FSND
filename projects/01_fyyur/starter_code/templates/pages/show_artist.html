@@ -6,6 +6,11 @@
 		<h1 class="monospace">
 			{{ artist.name }}
 		</h1>
+		<div>
+			<a class="btn btn-secondary btn-sm m-1" href="/artists/{{artist.id}}/edit">Update</a>
+			<button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#DeleteModal">Delete</button>
+		</div>
+		<hr>
 		<p class="subtitle">
 			ID: {{ artist.id }}
 		</p>
@@ -44,33 +49,78 @@
 	</div>
 </div>
 <section>
-	<h2 class="monospace">{{ artist.upcoming_shows_count }} Upcoming {% if artist.upcoming_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
+	<h2 class="monospace">{{ upcoming_shows | length }} Upcoming {% if upcoming_shows | length == 1 %}Show{% else %}Shows{% endif %}</h2>
 	<div class="row">
-		{%for show in artist.upcoming_shows %}
+		{%for show in upcoming_shows %}
 		<div class="col-sm-4">
 			<div class="tile tile-show">
 				<img src="{{ show.venue_image_link }}" alt="Show Venue Image" />
 				<h5><a href="/venues/{{ show.venue_id }}">{{ show.venue_name }}</a></h5>
-				<h6>{{ show.start_time|datetime('full') }}</h6>
+				<h6>{{ show.start_time }}</h6>
 			</div>
 		</div>
 		{% endfor %}
 	</div>
 </section>
 <section>
-	<h2 class="monospace">{{ artist.past_shows_count }} Past {% if artist.past_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
+	<h2 class="monospace">{{ past_shows | length }} Past {% if past_shows | length == 1 %}Show{% else %}Shows{% endif %}</h2>
 	<div class="row">
-		{%for show in artist.past_shows %}
+		{%for show in past_shows %}
 		<div class="col-sm-4">
 			<div class="tile tile-show">
 				<img src="{{ show.venue_image_link }}" alt="Show Venue Image" />
 				<h5><a href="/venues/{{ show.venue_id }}">{{ show.venue_name }}</a></h5>
-				<h6>{{ show.start_time|datetime('full') }}</h6>
+				<h6>{{ show.start_time }}</h6>
 			</div>
 		</div>
 		{% endfor %}
 	</div>
 </section>
+<!-- Modal -->
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="DeleteModalLabel">Caution</h5>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+		  The data will be deleted
+		</div>
+		<div class="modal-footer">
+			<form action="" id="delete-form">
+				<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+				<input id='delete-btn'type="submit" class="btn btn-danger btn-sm" value="Delete">
+			</form>
+		</div>
+	  </div>
+	</div>
+</div>
+<script>
+	window.onload = function(){
+	  document.getElementById('delete-form').onsubmit = function(){
+		  var response =  $.ajax({
+			  method: 'DELETE',
+			  url: '/artists/{{artist.id}}',
+			  async: false
+		  })
+		  document.documentElement.innerHTML = response.responseText;
+	  }
+  }
+	// 	fetch('/artists/{{ artist.id}}', {
+  // 		method:'DELETE',
+  // 		referrerPolicy: 'same-origin'
+  // 	})
+  // 	.then(
+  // 		function(){
+  // 			console.log('hello');
+  // 			window.location.replace('../../');
+  // 		}
+  // 	)
+  //   }
 
+</script>
 {% endblock %}
 
